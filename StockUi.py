@@ -3,7 +3,6 @@ from tkinter import ttk
 from tkinter import messagebox
 import matplotlib
 from tkcalendar import DateEntry
-
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from Stockcontroller import *

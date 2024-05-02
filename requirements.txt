@@ -1,4 +1,5 @@
-matplotlib>=3.5.1
-pandas>=1.4.2
-tkinter>=8.6.12
-yfinance>=0.2.18
+matplotlib>=3.7.1
+pandas>=1.5.3
+tkinter>=8.6
+yfinance>=0.2.38
+tkcalendar >= 1.6.1
