@@ -23,3 +23,6 @@ class StockController:
         """Plotting the graph"""
         return self.stm.plotting()
 
+    def describe(self):
+        return self.stm.compute_descriptive()
+

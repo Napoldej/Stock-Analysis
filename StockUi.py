@@ -19,8 +19,8 @@ class StockUI(tk.Tk):
         self.price = ["Open","Close","Low","High", "Adj Close", "Volume"]
         self.graph_type = ["line", "hist"]
         self.all_data = self.controller.load_data()
-        self.from_date = None
-        self.to_date  =None
+        self.from_date = "2022-01-01"
+        self.to_date  = "2023-12-31"
         self.init_component()
 
 
@@ -28,7 +28,6 @@ class StockUI(tk.Tk):
 
 
     def init_component(self):
-
         self.init_graph()
         self.selectionFrame = tk.LabelFrame(self, text = "Selection", height = 100, width= 100)
         self.buttonFrame = tk.Frame(self)
@@ -76,9 +75,9 @@ class StockUI(tk.Tk):
         self.time_selection = tk.Button(self.selectionFrame, text = "Time selection", command= self.time_selection_handler)
 
         self.distribution = tk.Button(self.buttonFrame, text = "Distribution", command= self.show_distribution_page)
-        self.dataExp = tk.Button(self.buttonFrame, text = "Data Exploration")
-        self.dataStory = tk.Button(self.buttonFrame,text = "Data Storytelling")
-        self.attributes_rela = tk.Button(self.buttonFrame, text = "Attributes Relationship", command = self.show_distribution_page)
+        self.descriptive_statistic = tk.Button(self.buttonFrame, text = "Descriptive Statistics",command = self.show_descriptive_page)
+        self.dataStory = tk.Button(self.buttonFrame,text = "Data Storytelling", command = self.show_data_storytelling_page)
+        self.attributes_rela = tk.Button(self.buttonFrame, text = "Attributes Relationship", command = self.show_attribute_rela)
 
 
 
@@ -91,36 +90,117 @@ class StockUI(tk.Tk):
 
 
         self.distribution.grid(row = 3, column = 0, padx = 5, sticky = "NSEW")
-        self.dataExp.grid(row = 3, column = 1, padx = 5, sticky = "NSEW")
+        self.descriptive_statistic.grid(row = 3, column = 1, padx = 5, sticky = "NSEW")
         self.dataStory.grid(row = 3, column = 2, padx = 5, sticky = "NSEW")
         self.attributes_rela.grid(row = 3, column = 3, padx = 5, sticky = "NSEW")
 
 
-        button_self = [self.distribution, self.dataExp, self.dataStory, self.attributes_rela]
+        button_self = [self.distribution, self.descriptive_statistic, self.dataStory, self.attributes_rela]
         for i,j in enumerate(button_self):
             j.grid_rowconfigure(0, weight = 0)
             j.grid_columnconfigure(i, weight = 0)
 
-
-
     def show_distribution_page(self):
+        # Hide current frames
         self.selectionFrame.grid_remove()
         self.buttonFrame.grid_remove()
 
+        # Create a new frame for the distribution page
         self.distribution_frame = tk.Frame(self)
         self.distribution_frame.grid(row=0, column=0, sticky="NSEW")
 
-        tk.Label(self.distribution_frame, text="Distribution Page").pack()
+        # Add content to the distribution page
+        distribution_label = tk.Label(self.distribution_frame, text="Distribution Page")
+        distribution_label.grid(row=0, column=0, padx=10, pady=10)
 
-        back_button = tk.Button(self.distribution_frame, text="Back", command=self.show_initial_page)
-        back_button.pack()
+        # Create a back button to return to the initial page
+        self.create_back_button(self.distribution_frame)
+
+    def show_descriptive_page(self):
+        num = 1
+        num1 = 1
+        self.selectionFrame.grid_remove()
+        self.buttonFrame.grid_remove()
+        self.descriptive_statistic_frame = tk.Frame(self)
+        self.descriptive_statistic_frame.grid(row=0,column = 0, sticky = "NSEW")
+        if len(self.controller.describe()) == 2:
+            self.descrip_frame2 = tk.LabelFrame(self.descriptive_statistic_frame, text = f"Descriptive of {self.value_var.get()} and {self.compare_var.get()}")
+            self.descrip_frame2.grid(row = 1,column = 0, sticky = "NSEW")
+            self.descriptive_statistic_label2 = tk.Label(self.descriptive_statistic_frame,
+                                                        text=f"Descriptive statistic of {self.stock_var.get()} between {self.value_var.get()} and {self.compare_var.get()} from {self.from_date} to {self.to_date}")
+            self.descriptive_statistic_label2.grid(row=0, column=0, sticky="NSEW")
+            self.describe_value,self.describe_value1= self.controller.describe()
+            self.name_var1 = tk.Label(self.descrip_frame2, text= f"{self.value_var.get()}")
+            self.name_var1.grid(row = 0, column = 0, sticky = "NSEW")
+            for name,value in self.describe_value.items():
+                self.describe1 = tk.Label(self.descrip_frame2, text=f"{name}  : {value:.3f}")
+                self.describe1.grid(row=num, column=0,sticky="NSEW")
+                num += 1
+            self.name_var2 = tk.Label(self.descrip_frame2, text = f"{self.compare_var.get()}")
+            self.name_var2.grid(row = 0, column = 1, sticky ="NSEW")
+            for name,value in self.describe_value1.items():
+
+                self.describe2 = tk.Label(self.descrip_frame2, text = f"{name} : {value:.3f}")
+                self.describe2.grid(row = num1, column = 1,sticky = "NSEW")
+                num1+=1
+            self.descrip_frame2.columnconfigure(0,weight = 1)
 
 
 
-    def show_initial_page(self):
-        self.distribution_frame.grid_remove()
+        if len(self.controller.describe()) == 8:
+            self.descrip_frame1 = tk.LabelFrame(self.descriptive_statistic_frame, text = f"{self.value_var.get()}")
+            self.descrip_frame1.grid(row = 1, column = 0, padx =5, pady =5, sticky ="NSEW")
+            self.descrip_frame1.columnconfigure(0,weight =1 )
+            self.descriptive_statistic_label1 = tk.Label(self.descriptive_statistic_frame,
+                                                        text=f"Descriptive statistic of {self.stock_var.get()} from {self.from_date} to {self.to_date}")
+            self.descriptive_statistic_label1.grid(row=0, column=0, sticky="NSEW")
+            self.describe_value =self.controller.describe()
+            for name,value in self.describe_value.items():
+                self.describe1 = tk.Label(self.descrip_frame1, text = f"{name}  : {value:.3f}")
+                self.describe1.grid(row = num, column = 0,padx = 5,pady = 5, sticky = "NSEW")
+                num+=1
+        self.create_back_button(self.descriptive_statistic_frame,10,0)
+        self.descriptive_statistic_frame.columnconfigure(0, weight=1)
+
+
+    def show_data_storytelling_page(self):
+        self.selectionFrame.grid_remove()
+        self.buttonFrame.grid_remove()
+        self.data_story_telling_frame = tk.Frame(self)
+        self.data_story_telling_frame.grid(row = 0, column = 0, sticky = "NSEW")
+        self.data_story_telling_label = tk.Label(self.data_story_telling_frame, text="Data Storytelling Page")
+        self.data_story_telling_label.grid(row=0, column=0, sticky="NSEW")
+
+        self.create_back_button(self.data_story_telling_frame)
+
+
+    def show_attribute_rela(self):
+        self.selectionFrame.grid_remove()
+        self.buttonFrame.grid_remove()
+        self.attributes_rela_frame = tk.Frame(self)
+
+        self.attributes_rela_frame.grid(row = 0, column = 0, sticky = "NSEW")
+        self.attributes_rela_label = tk.Label(self.attributes_rela_frame, text="Attributes Relationship Page")
+        self.attributes_rela_label.grid(row=0, column=0, sticky="NSEW")
+
+        self.create_back_button(self.attributes_rela_frame)
+
+
+
+
+
+
+
+    def show_initial_page(self,frame):
+        frame.grid_remove()
         self.selectionFrame.grid()
         self.buttonFrame.grid()
+
+
+
+    def create_back_button(self,frame,row,column):
+        back_button = tk.Button(frame, text = "Back", command= lambda :self.show_initial_page(frame))
+        back_button.grid(row =row, column  = column, padx = 5, pady = 5, sticky = "NSEW")
 
     def init_checkbox(self):
         self.checkbox_var = tk.BooleanVar()
@@ -209,9 +289,3 @@ class StockUI(tk.Tk):
 
     def run(self):
         self.mainloop()
-
-# Run the application
-controller = StockController()
-main = StockUI(controller)
-main.run()
-

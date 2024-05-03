@@ -73,9 +73,27 @@ class StockModel:
     def plotting(self):
         """Set dataframe and Plotting the graph"""
         if len(self.value) == 2:
-            filter_data = self.all_data.loc[self.__from_date:self.__to_date]
-            return filter_data[self.ticker][self.value].plot(kind=self.graphtype, xlabel='date', ylabel=f"{self.value[0]} and {self.value[1]}", title=f'{self.value[0]} vs {self.value[1]} chart of {self.ticker}', ax=self.ax, grid=True, logy=False)
+            self.filter_data = self.all_data.loc[self.__from_date:self.__to_date]
+            return self.filter_data[self.ticker][self.value].plot(kind=self.graphtype, xlabel='date', ylabel=f"{self.value[0]} and {self.value[1]}", title=f'{self.value[0]} vs {self.value[1]} chart of {self.ticker}', ax=self.ax, grid=True, logy=False)
+        self.filter_data = self.all_data.loc[self.__from_date:self.__to_date]
+        return self.filter_data[self.ticker][self.value].plot(kind=self.graphtype, xlabel='date', ylabel=self.value[0], title=f'{self.value[0]} chart of {self.ticker}', ax=self.ax, grid=True, logy=False)
+
+    def compute_descriptive(self):
         filter_data = self.all_data.loc[self.__from_date:self.__to_date]
-        return filter_data[self.ticker][self.value].plot(kind=self.graphtype, xlabel='date', ylabel=self.value[0], title=f'{self.value[0]} chart of {self.ticker}', ax=self.ax, grid=True, logy=False)
+        if len(self.value) == 2:
+            filter_value = filter_data[self.ticker][self.value[0]]
+            filter_value1 = filter_data[self.ticker][self.value[1]]
+            describe_value  = filter_value.describe()
+            describe_value1 = filter_value1.describe()
+            return describe_value,describe_value1
+        filter_value = filter_data[self.ticker][self.value[0]]
+        describe_value = filter_value.describe()
+        return describe_value
+
+
+
+
+
+
 
 
