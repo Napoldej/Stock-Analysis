@@ -114,7 +114,7 @@ class StockUI(tk.Tk):
         distribution_label.grid(row=0, column=0, padx=10, pady=10)
 
         # Create a back button to return to the initial page
-        self.create_back_button(self.distribution_frame)
+        self.create_back_button(self.distribution_frame,1,0)
 
     def show_descriptive_page(self):
         num = 1
@@ -171,7 +171,7 @@ class StockUI(tk.Tk):
         self.data_story_telling_label = tk.Label(self.data_story_telling_frame, text="Data Storytelling Page")
         self.data_story_telling_label.grid(row=0, column=0, sticky="NSEW")
 
-        self.create_back_button(self.data_story_telling_frame)
+        self.create_back_button(self.data_story_telling_frame,1,0)
 
 
     def show_attribute_rela(self):
@@ -183,7 +183,7 @@ class StockUI(tk.Tk):
         self.attributes_rela_label = tk.Label(self.attributes_rela_frame, text="Attributes Relationship Page")
         self.attributes_rela_label.grid(row=0, column=0, sticky="NSEW")
 
-        self.create_back_button(self.attributes_rela_frame)
+        self.create_back_button(self.attributes_rela_frame,1,0)
 
 
 
