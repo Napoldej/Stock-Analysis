@@ -26,3 +26,4 @@ class StockController:
     def describe(self):
         return self.stm.compute_descriptive()
 
+

@@ -10,3 +10,4 @@ This helps investors decide whether they should invest or not. Additionally, the
 ## How to run
 The package needed for this program, yoo can install in requirements.txt file by the command `pip install -r requirements.txt.` Then you can run the program in file [`main.py`](main.py)
 
+

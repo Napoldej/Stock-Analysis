@@ -191,6 +191,7 @@ class StockUI(tk.Tk):
 
 
 
+
     def show_initial_page(self,frame):
         frame.grid_remove()
         self.selectionFrame.grid()
