@@ -9,6 +9,7 @@ from Stockcontroller import *
 matplotlib.use("TkAgg")
 
 
+
 class StockUI(tk.Tk):
     def __init__(self,controller: StockController):
         super().__init__()
