@@ -11,3 +11,9 @@ This helps investors decide whether they should invest or not. Additionally, the
 The package needed for this program, yoo can install in requirements.txt file by the command `pip install -r requirements.txt.` Then you can run the program in file [`main.py`](main.py)
 
 
+## Application features
+- **Showing graph and Compare attribute**: On the main page, the program will display the graph according to the user interaction.
+- **Descriptive Statistics**: Show the descriptive statistics of the user's selection attributes.
+- **Distribution(in progress)**: Show the distribution graph of volume.
+- **DataStorytelling(in progress)** Show the line graph of open, high and low prices over the period. Additionally, the program will display the scatter plot between closing price and volume attributes
+- **Attribute Relationship(in progress)**: This feature is will show the scatter plot graph and compute the coefficient correlation between the user's selection attributes.
