@@ -1,6 +1,5 @@
 import yfinance as yf
-import pandas as pd
-import  numpy as np
+
 
 class StockModel:
     # top 10 best performance stock in 2023
@@ -160,7 +159,7 @@ class StockModel:
         temp_df = filter_data1[~((filter_data1["Volume"] < q1 - 1.5 * iqr) | (
                     filter_data1["Volume"] > q3 + 1.5 * iqr))]
 
-        volume_dist = temp_df["Volume"].plot(kind =  "hist",ax = ax, title = f"The volume distribution of {stock}", xlabel = "The sales of volume")
+        volume_dist = temp_df["Volume"].plot(kind =  "hist",ax = ax, title = f"The volume distribution of {stock}", xlabel = "The sales of volume (in ten million)")
         return volume_dist
 
 
@@ -168,6 +167,33 @@ class StockModel:
         filter_value_descrip = self.all_data[stock]["Volume"]
         describe_volume = filter_value_descrip.describe()
         return describe_volume
+
+
+
+    def All_prices(self,ax):
+        att_list = ["Open","High","Low", "Adj Close"]
+        filter_data = self.all_data["NVDA"]
+        return filter_data[att_list].plot(ylabel = "Price", xlabel = "Date", title = "Stock Prices for NVDA", kind = "line", ax = ax)
+
+
+
+    def closing_volume(self,ax):
+        filter_data1 = self.all_data["NVDA"]
+        return filter_data1.plot(kind = "scatter", x = "Close", y = "Volume",
+                                title = "Correlation between Closing price and Volume", ax =ax)
+
+
+    def bar_volume(self,ax):
+        filter_data1 = self.all_data["NVDA"]
+
+        q1 = filter_data1["Volume"].quantile(0.25)
+        q3 = filter_data1["Volume"].quantile(0.75)
+        iqr = q3 - q1
+        temp_df = filter_data1[~((filter_data1["Volume"] < q1 - 1.5 * iqr) | (
+                filter_data1["Volume"] > q3 + 1.5 * iqr))]
+
+        return temp_df["Volume"].plot(kind = "bar",ax = ax, xlabel = "Date", title = "Volume", x= "Date", ylabel = "the Sale of Volume")
+
 
 
 

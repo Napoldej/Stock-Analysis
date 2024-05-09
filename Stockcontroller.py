@@ -1,9 +1,10 @@
 from StockModel import  *
-
+from StockUi import *
 class StockController:
     def __init__(self) -> None:
         self.stm = StockModel(all_data=None, ticker=None,
                             value=None, graphtype=None,from_date="2022-01-01",to_date= "2023-12-31",ax=None)
+
 
     def initialize_corr(self,corr1,corr2,stock,ax):
         self.stm.corr1 = corr1
@@ -23,8 +24,11 @@ class StockController:
 
 
     def load_data(self):
-        """Load data from yahoo finance"""
-        return self.stm.load_data()
+        load_data = self.stm.load_data()
+        return load_data
+
+
+
 
     def plotting(self):
         """Plotting the graph"""
@@ -49,4 +53,14 @@ class StockController:
 
     def descriptive_distribution(self,stock):
         return self.stm.descriptive_for_distribution(stock)
+
+
+    def AlL_price(self,ax):
+        return self.stm.All_prices(ax)
+
+    def closing_price(self,ax):
+        return self.stm.closing_volume(ax)
+
+    def bar_volume(self,ax):
+        return self.stm.bar_volume(ax)
 

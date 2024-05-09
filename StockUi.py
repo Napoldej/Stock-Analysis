@@ -2,17 +2,18 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
 import matplotlib
-from tkcalendar import DateEntry
+from tkcalendar import DateEntry, Calendar
 import customtkinter as ctk
+from datetime import datetime
 from customtkinter import *
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from Stockcontroller import *
+
 matplotlib.use("TkAgg")
 
 
 class StockUI(tk.Tk):
-    def __init__(self,controller: StockController):
+    def __init__(self,controller):
         super().__init__()
         self.controller = controller
         self.title("Stock Analysis")
@@ -20,7 +21,7 @@ class StockUI(tk.Tk):
             ,"AMD","CCL","PHM", "AAPL", "TSLA"]
         self.price = ["Open","Close","Low","High", "Adj Close", "Volume"]
         self.graph_type = ["line", "hist"]
-        self.all_data = self.controller.load_data()
+        self.all_data = None
         self.from_date = "2022-01-01"
         self.to_date  = "2023-12-31"
         self.coefficient = "0.000"
@@ -106,16 +107,18 @@ class StockUI(tk.Tk):
         self.clear = tk.Button(self.selectionFrame, text = "Reset", command = self.clear_handler)
         self.exit = tk.Button(self.selectionFrame, text  = "Exit", command = self.exit_handler)
         self.time_selection = tk.Button(self.selectionFrame, text = "Time selection", command= self.time_selection_handler)
+        self.load_data = tk.Button(self.selectionFrame, text = "Load Data", command = self.load_data_handler)
 
         self.distribution = tk.Button(self.buttonFrame, text = "Distribution", command= self.show_distribution_page)
         self.descriptive_statistic_btn = tk.Button(self.buttonFrame, text = "Descriptive Statistics",command = self.show_descriptive_page,
-                                               state= tk.DISABLED)
+                                                   state= tk.DISABLED)
 
         self.dataStory = tk.Button(self.buttonFrame,text = "Data Storytelling", command = self.show_data_storytelling_page)
         self.attributes_rela = tk.Button(self.buttonFrame, text = "Attributes Relationship", command = self.show_attribute_rela)
 
 
         self.time_selection.grid(row = 0, column = 1, padx = 5, sticky= "NSEW")
+        self.load_data.grid(row = 0 , column = 2, padx =5 , sticky = "NSEW")
 
         self.plot.grid(row = 4, column = 0,padx = 5, sticky = "NSEW")
         self.clear.grid(row = 4, column = 1,padx = 5, sticky = "NSEW")
@@ -136,6 +139,8 @@ class StockUI(tk.Tk):
         self.plot.bind("<Button-1>", self.click_plot)
 
 
+    def load_data_handler(self):
+        self.all_data = self.controller.load_data()
 
     def show_distribution_page(self):
         # Hide current frames
@@ -261,10 +266,52 @@ class StockUI(tk.Tk):
         self.buttonFrame.grid_remove()
         self.data_story_telling_frame = tk.Frame(self)
         self.data_story_telling_frame.grid(row = 0, column = 0, sticky = "NSEW")
-        self.data_story_telling_label = tk.Label(self.data_story_telling_frame, text="Data Storytelling Page")
-        self.data_story_telling_label.grid(row=0, column=0, sticky="NSEW")
+        self.data_story_telling_label = tk.Label(self.data_story_telling_frame, text="Data Storytelling Page", font = ("Arial",20, "bold"))
+        self.data_story_telling_label.grid(row=0, column=1, sticky="NSEW")
+        self.init_datastorytelling_graph()
+        self.controller.AlL_price(self.axes3)
+        self.controller.closing_price(self.axe4)
+        self.controller.bar_volume(self.axe5)
+        self.fig_canvas3.draw()
+        self.fig_canvas4.draw()
+        self.fig_canvas5.draw()
 
-        self.create_back_button(self.data_story_telling_frame,1,0)
+
+        for i in range(2):
+            self.data_story_telling_frame.columnconfigure(i,weight = 1)
+            self.data_story_telling_frame.rowconfigure(i,weight = 1)
+
+
+        self.create_back_button(self.data_story_telling_frame,2,1)
+
+
+    def init_datastorytelling_graph(self):
+        self.fig3 = Figure(figsize=(5, 5))
+        self.axes3 = self.fig3.add_subplot()
+
+        self.fig_canvas3 = FigureCanvasTkAgg(self.fig3, master=self.data_story_telling_frame)
+        self.fig_canvas3.get_tk_widget().grid(
+            row=1, column=0, sticky="NSEW", padx=10, pady=10
+        )
+
+        self.fig4 = Figure(figsize=(5,5))
+        self.axe4 = self.fig4.add_subplot()
+        self.fig_canvas4 = FigureCanvasTkAgg(self.fig4, master=self.data_story_telling_frame)
+        self.fig_canvas4.get_tk_widget().grid(
+            row=1, column=1, sticky="NSEW", padx=10, pady=10
+        )
+
+        self.fig5 = Figure(figsize=(5, 5))
+        self.axe5 = self.fig5.add_subplot()
+        self.fig_canvas5 = FigureCanvasTkAgg(self.fig5, master=self.data_story_telling_frame)
+        self.fig_canvas5.get_tk_widget().grid(
+            row=1, column=2, sticky="NSEW", padx=10, pady=10
+        )
+
+
+
+
+
 
 
 
@@ -305,7 +352,7 @@ class StockUI(tk.Tk):
 
 
         #Coefficient correlation:
-        self.cof_corr_label = tk.Label(self.attributes_rela_frame, text = f"Coefficient Correlation: {self.coefficient}")
+        self.cof_corr_label = tk.Label(self.attributes_rela_frame, text = f"Coefficient Correlation: {self.coefficient}", font = ("Arial",15,"bold"))
         self.cof_corr_label.grid(row = 3, column = 1,pady = 20 ,sticky = "NSEW")
 
 
@@ -344,6 +391,8 @@ class StockUI(tk.Tk):
         self.controller.initialize_corr(att1,att2,stock,self.axes1)
         self.controller.plotting_cor()
         self.fig_canvas1.draw()
+        self.coefficient = self.controller.compute_coff()
+        self.cof_corr_label.config(text= f"Coefficient Correlation: {self.coefficient:.4f}")
 
 
     def selection_in_corr_page(self):
@@ -356,14 +405,16 @@ class StockUI(tk.Tk):
         self.selection_2 = ttk.Combobox(self.selection_frame, textvariable=  self.select2_var)
         self.selection_stock = ttk.Combobox(self.selection_frame, textvariable=  self.select_stock_corr)
         self.plot_corr = tk.Button(self.selection_frame, text = "Plot", command = self.plot_corr_handler)
-        self.compute_corr = tk.Button(self.selection_frame, text = "Compute")
+
+        self.reset_corr = tk.Button(self.selection_frame, text =  "Reset", command = self.reset_corr_handler)
+        self.reset_corr.grid(row = 0, column = 4, sticky = "NSEW")
         self.plot_corr.grid(row = 0 , column = 3, sticky = "NSEW")
-        self.compute_corr.grid(row = 0, column = 4, sticky = "NSEW")
+
         self.selection_1.grid(row = 0, column = 1 , sticky = "NSEW",)
         self.selection_2.grid(row = 0, column = 2, sticky = "NSEW")
         self.selection_stock.grid(row = 0, column = 0, sticky = "NSEW")
 
-        self.compute_corr.bind("<Button-1>", self.compute_coefficient)
+        # self.compute_corr.bind("<Button-1>", self.compute_coefficient)
         self.plot_corr.bind("<Button-1>", self.descriptive_for_corr)
 
 
@@ -371,8 +422,21 @@ class StockUI(tk.Tk):
             self.selection_frame.columnconfigure(i,weight = 1)
 
     def compute_coefficient(self,event):
-        self.coefficient = self.controller.compute_coff()
-        self.cof_corr_label.config(text= f"Coefficient Correlation: {self.coefficient:.4f}")
+        pass
+
+    def reset_corr_handler(self):
+        self.axes1.clear()
+        self.fig_canvas1.draw()
+        self.select1_var.set("Select the attribute")
+        self.select2_var.set("Select the attribute ")
+        self.select_stock_corr.set("Select the stock")
+        self.cof_corr_label.config(text=  f"Coefficient Correlation: 0.000")
+        self.dc_att_2_frame_sub.grid_remove()
+        self.dc_att_1_frame_sub.grid_remove()
+        self.att1.config(text = "Attribute 1")
+        self.att2.config(text = "Attribute 2")
+
+
 
 
     def descriptive_for_corr(self,event):
@@ -383,15 +447,19 @@ class StockUI(tk.Tk):
         describe3, describe4 =self.controller.describe_corr()
         self.att1.config(text=  f"{att1}")
         self.att2.config(text= f"{att2}")
+        self.dc_att_1_frame_sub = tk.Frame(self.dc_att_1_frame)
+        self.dc_att_2_frame_sub = tk.Frame(self.dc_att_2_frame)
+        self.dc_att_1_frame_sub.grid(row = 1, column = 0, sticky= "NSEW")
+        self.dc_att_2_frame_sub.grid(row= 1 , column = 0 , sticky= "NSEW")
         num = 1
         num1 = 1
         for name,value in describe3.items():
-            self.describe3 = tk.Label(self.dc_att_1_frame, text=f"{name}  : {value:.3f}")
-            self.describe3.grid(row=num, column=0, sticky="NSEW")
+            self.describe3 = tk.Label(self.dc_att_1_frame_sub, text=f"{name}  : {value:.3f}")
+            self.describe3.grid(row=num, column=0, padx = 10 ,sticky="NSEW")
             num += 1
         for name,value in describe4.items():
-            self.describe4 = tk.Label(self.dc_att_2_frame, text=f"{name}  : {value:.3f}")
-            self.describe4.grid(row=num1, column=0, sticky="NSEW")
+            self.describe4 = tk.Label(self.dc_att_2_frame_sub, text=f"{name}  : {value:.3f}")
+            self.describe4.grid(row=num1, column=0,padx = 10 ,sticky="NSEW")
             num1 += 1
 
 
@@ -410,6 +478,8 @@ class StockUI(tk.Tk):
     def create_back_button(self,frame,row,column):
         back_button = tk.Button(frame, text = "Back", command= lambda :self.show_initial_page(frame))
         back_button.grid(row =row, column  = column, padx = 5, pady = 5, sticky = "NSEW")
+
+
 
     def init_checkbox(self):
         self.checkbox_var = tk.BooleanVar()
@@ -437,8 +507,8 @@ class StockUI(tk.Tk):
         self.graph_var.set("Select the graph")
         self.selectcompare.grid_remove()
         self.descriptive_statistic_btn.config(state = tk.DISABLED)
-        self.from_date = None
-        self.to_date = None
+        self.from_date = "2022-01-01"
+        self.to_date = "2023-12-31"
         self.axes.clear()
         self.fig_canvas.draw()
         if self.checkbox_var.get():
@@ -462,6 +532,7 @@ class StockUI(tk.Tk):
         self.fig_canvas.draw()
 
     def time_selection_handler(self):
+        self.from_date_var = tk.StringVar()
         self.time_selection = tk.Toplevel(self)
         self.time_selection.title("Date Selection")
         self.from_label = tk.Label(self.time_selection, text = "From date: yyyy-mm-dd")
@@ -469,8 +540,8 @@ class StockUI(tk.Tk):
         self.finish_button = tk.Button(self.time_selection, text = "Finish", command = self.finish_select_date)
         self.from_label.grid(row = 0, column  = 0, padx = 5, pady = 5, sticky = "NSEW")
         self.to_label.grid(row = 1, column = 0, padx = 5 , pady = 5, sticky ="NSEW")
-        self.from_date_entry = DateEntry(self.time_selection, date_pattern='yyyy-mm-dd', fg = "Black")
-        self.to_date_entry = DateEntry(self.time_selection,date_pattern =  "yyyy-mm-dd")
+        self.from_date_entry = Calendar(self.time_selection, date_pattern='yyyy-mm-dd', fg = "Black")
+        self.to_date_entry = Calendar(self.time_selection,date_pattern =  "yyyy-mm-dd")
         self.from_date_entry.grid(row=0, column=1, padx=5, pady=5, sticky = "NSEW")
         self.to_date_entry.grid(row = 1, column = 1, padx = 5, pady =5, sticky = "NSEW")
         self.finish_button.grid(row = 2, column = 1, padx = 5, pady = 5 , sticky = "NSEW")
@@ -478,9 +549,14 @@ class StockUI(tk.Tk):
             self.time_selection.columnconfigure(i, weight = 1)
 
     def finish_select_date(self):
-        if self.from_date_entry.get_date().year > 2023 or self.to_date_entry.get_date().year > 2023:
+        date_format = "%Y-%m-%d"
+        self.get_date_from = self.from_date_entry.get_date()
+        self.get_date_to = self.to_date_entry.get_date()
+        self.convert_from = datetime.strptime(self.get_date_from, date_format)
+        self.convert_to = datetime.strptime(self.get_date_to, date_format)
+        if self.convert_from.year > 2023 or self.convert_to.year > 2023:
             messagebox.showerror("Error", "Please enter a year not exceed 2023")
-        if self.from_date_entry.get_date().year < 2022 or self.to_date_entry.get_date().year < 2022:
+        elif self.convert_from.year < 2022 or self.convert_to.year < 2022:
             messagebox.showerror("Error", "Please enter a year not below 2022")
         else:
             self.from_date = self.from_date_entry.get_date()
