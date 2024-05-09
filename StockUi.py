@@ -135,21 +135,79 @@ class StockUI(tk.Tk):
 
         self.plot.bind("<Button-1>", self.click_plot)
 
+
+
     def show_distribution_page(self):
         # Hide current frames
         self.selectionFrame.grid_remove()
         self.buttonFrame.grid_remove()
+        self.fig_canvas.get_tk_widget().grid_remove()
+        self.list_var = tk.StringVar()
+
+
+
+
 
         # Create a new frame for the distribution page
         self.distribution_frame = tk.Frame(self)
         self.distribution_frame.grid(row=0, column=0, sticky="NSEW")
 
-        # Add content to the distribution page
-        distribution_label = tk.Label(self.distribution_frame, text="Distribution Page")
-        distribution_label.grid(row=0, column=0, padx=10, pady=10)
+        self.listbox_distribution = tk.Listbox(self.distribution_frame)
+        self.listbox_distribution.grid(row = 1, column = 0 , sticky = "NSEW")
+        for item in self.stock:
+            self.listbox_distribution.insert(tk.END, item)
 
-        # Create a back button to return to the initial page
-        self.create_back_button(self.distribution_frame,1,0)
+
+
+        self.select_button = tk.Button(self.distribution_frame, text = "Select")
+        self.select_button.grid(row = 2, column = 0, sticky = "NSEW")
+
+
+        self.init_distribution_graph()
+        self.select_button.bind("<Button-1>", self.plot_distribution)
+
+        self.descrip_disframe = tk.LabelFrame(self.distribution_frame, text = f"Descriptive Statistic of volume")
+        self.descrip_disframe.grid(row = 1, column  = 2 ,sticky = "NSEW")
+
+
+
+
+
+        # Add content to the distribution page
+        distribution_label = tk.Label(self.distribution_frame, text="Volume Distribution", font = ("Arial",30, "bold"))
+        distribution_label.grid(row=0, column=1, padx=10, pady=10)
+        for i in range(3):
+            self.distribution_frame.columnconfigure(i, weight = 1)
+            self.distribution_frame.rowconfigure(i,weight = 1)
+            self.descrip_disframe.columnconfigure(i, weight = 1)
+
+
+        self.create_back_button(self.distribution_frame,3,0)
+
+
+    def plot_distribution(self, event = None):
+        self.axes2.clear()
+        values = self.listbox_distribution.curselection()
+        if values:
+            index = values[0]
+            self.val = self.listbox_distribution.get(index)
+            self.controller.show_distribution(self.val , self.axes2)
+            self.fig_canvas2.draw()
+
+        describe_volume = self.controller.descriptive_distribution(self.val)
+        num = 0
+        for name, value in describe_volume.items():
+            self.describe1 = tk.Label(self.descrip_disframe, text=f"{name}  : {value:.3f}")
+            self.describe1.grid(row=num, column=0, sticky="NSEW")
+            num += 1
+
+    def init_distribution_graph(self):
+        self.fig2 = Figure(figsize=(6, 4))
+        self.axes2 = self.fig2.add_subplot()
+        self.fig_canvas2 = FigureCanvasTkAgg(self.fig2, master=self.distribution_frame)
+        self.fig_canvas2.get_tk_widget().grid(
+            row=1, column=1, sticky="NSEW", padx=20, pady=20
+        )
 
     def show_descriptive_page(self):
         num = 1
@@ -208,6 +266,9 @@ class StockUI(tk.Tk):
 
         self.create_back_button(self.data_story_telling_frame,1,0)
 
+
+
+
     def show_attribute_rela(self):
         self.selectionFrame.grid_remove()
         self.buttonFrame.grid_remove()
@@ -229,12 +290,17 @@ class StockUI(tk.Tk):
 
         # Label frame for descriptive statistics attribute 1
         self.dc_att_1_frame = tk.LabelFrame(self.attributes_rela_frame, text="Descriptive Statistics attribute 1", width = 200, height = 200)
+        self.att1 = tk.Label(self.dc_att_1_frame, text=  "Attribute 1")
+        self.att1.grid(row = 0, column = 0, sticky = "NSEW")
         self.dc_att_1_frame.grid(row=2, column=0, padx=10, pady=10, sticky="NSEW")
+
 
         # Label frame for descriptive statistics attribute 2
         self.dc_att_2_frame = tk.LabelFrame(self.attributes_rela_frame, text="Descriptive Statistics attribute 2")
 
         self.dc_att_2_frame.grid(row=2, column=2, padx=10, pady=10, sticky="NSEW")
+        self.att2 = tk.Label(self.dc_att_2_frame, text =  "Attribute 2")
+        self.att2.grid(row = 0 , column = 0, sticky = "NSEW")
 
 
 
@@ -315,8 +381,10 @@ class StockUI(tk.Tk):
         stock = self.select_stock_corr.get()
         self.controller.initialize_corr(att1, att2, stock, self.axes1)
         describe3, describe4 =self.controller.describe_corr()
-        num = 0
-        num1 = 0
+        self.att1.config(text=  f"{att1}")
+        self.att2.config(text= f"{att2}")
+        num = 1
+        num1 = 1
         for name,value in describe3.items():
             self.describe3 = tk.Label(self.dc_att_1_frame, text=f"{name}  : {value:.3f}")
             self.describe3.grid(row=num, column=0, sticky="NSEW")

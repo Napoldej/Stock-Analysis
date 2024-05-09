@@ -44,3 +44,9 @@ class StockController:
         return self.stm.compute_descriptive_for_corr()
 
 
+    def show_distribution(self, stock,ax):
+        return self.stm.distribution_graph(stock,ax)
+
+    def descriptive_distribution(self,stock):
+        return self.stm.descriptive_for_distribution(stock)
+
