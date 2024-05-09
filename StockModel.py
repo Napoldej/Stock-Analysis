@@ -1,5 +1,5 @@
 import yfinance as yf
-
+import pandas as pd
 
 class StockModel:
     # top 10 best performance stock in 2023
@@ -21,6 +21,10 @@ class StockModel:
         self.__from_date = from_date
         self.__to_date = to_date
         self.ax = ax
+        self.__corr1 = None
+        self.__corr2 = None
+        self.__stock_cor = None
+        self.__ax_corr = None
 
     @property
     def ticker(self):
@@ -63,6 +67,38 @@ class StockModel:
     def to_date(self, to_date):
         self.__to_date = to_date
 
+    @property
+    def corr1(self):
+        return self.__corr1
+
+    @corr1.setter
+    def corr1(self,corr1):
+        self.__corr1 = corr1
+
+    @property
+    def corr2(self):
+        return self.__corr2
+
+    @corr2.setter
+    def corr2(self,corr2):
+        self.__corr2 = corr2
+
+    @property
+    def stock_cor(self):
+        return self.__stock_cor
+
+    @stock_cor.setter
+    def stock_cor(self,stock_cor):
+        self.__stock_cor = stock_cor
+
+    @property
+    def ax_corr(self):
+        return self.__ax_corr
+
+    @ax_corr.setter
+    def ax_corr(self,ax_corr):
+        self.__ax_corr = ax_corr
+
 
     def load_data(self):
         self.all_data = yf.download(["NVDA","META","RCL", "BLDR", "UBER", "CCL",
@@ -91,8 +127,24 @@ class StockModel:
         return describe_value
 
 
+    def ploting_corr(self):
+        filter_data1 = self.all_data[self.stock_cor]
+        print(self.stock_cor)
 
+        return filter_data1.plot(kind = "scatter", x = self.__corr1,y = self.__corr2,xlabel = f"{self.__corr1}", ylabel = f"{self.__corr2}", ax = self.ax_corr)
 
+    def compute_coefficient(self):
+
+        filter_data2 = self.all_data[self.stock_cor]
+        return filter_data2[self.__corr1].corr(filter_data2[self.__corr2])
+
+    def compute_descriptive_for_corr(self):
+        print(self.stock_cor)
+        filter_value_corr1 = self.all_data[self.stock_cor][self.__corr1]
+        filter_value_corr2 = self.all_data[self.stock_cor][self.__corr2]
+        describe_1 =  filter_value_corr1.describe()
+        describe_2 =  filter_value_corr2.describe()
+        return describe_1,describe_2
 
 
 
