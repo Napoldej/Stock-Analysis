@@ -111,7 +111,7 @@ class StockUI(tk.Tk):
             width=2,
             height=2,
             command=self.plot_handler)
-        self.clear = tk.Button(
+        self.clear = ctk.CTkButton(
             self.selectionFrame,
             text="Reset",
             command=self.clear_handler)
@@ -199,7 +199,7 @@ class StockUI(tk.Tk):
         self.list_var = tk.StringVar()
 
         # Create a new frame for the distribution page
-        self.distribution_frame = tk.Frame(self)
+        self.distribution_frame = ctk.CTkFrame(self)
         self.distribution_frame.grid(row=0, column=0, sticky="NSEW")
 
         self.listbox_distribution = tk.Listbox(self.distribution_frame)
@@ -227,10 +227,13 @@ class StockUI(tk.Tk):
                 30,
                 "bold"))
         distribution_label.grid(row=0, column=1, padx=10, pady=10)
+
         for i in range(3):
             self.distribution_frame.columnconfigure(i, weight=1)
             self.distribution_frame.rowconfigure(i, weight=1)
             self.descrip_disframe.columnconfigure(i, weight=1)
+            self.columnconfigure(i,weight = 1)
+        self.rowconfigure(0,weight  = 1)
 
         self.create_back_button(self.distribution_frame, 3, 0)
 

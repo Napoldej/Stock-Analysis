@@ -1,10 +1,10 @@
 from StockModel import *
-from StockUi import *
+
 
 
 class StockController:
     def __init__(self) -> None:
-        self.stm = StockModel(
+        self.model = StockModel(
             all_data=None,
             ticker=None,
             value=None,
@@ -14,10 +14,10 @@ class StockController:
             ax=None)
 
     def initialize_corr(self, corr1, corr2, stock, ax):
-        self.stm.corr1 = corr1
-        self.stm.corr2 = corr2
-        self.stm.stock_cor = stock
-        self.stm.ax_corr = ax
+        self.model.corr1 = corr1
+        self.model.corr2 = corr2
+        self.model.stock_cor = stock
+        self.model.ax_corr = ax
 
     def get_all_data_from_ui(
             self,
@@ -29,44 +29,47 @@ class StockController:
             to_date,
             ax):
         """ Get all data from UI and set to StockStat class"""
-        self.stm.all_data = all_data
-        self.stm.ticker = stock
-        self.stm.value = value
-        self.stm.graphtype = graphtype
-        self.stm.from_date = from_date
-        self.stm.to_date = to_date
-        self.stm.ax = ax
+        self.model.all_data = all_data
+        self.model.ticker = stock
+        self.model.value = value
+        self.model.graphtype = graphtype
+        self.model.from_date = from_date
+        self.model.to_date = to_date
+        self.model.ax = ax
 
     def load_data(self):
-        return self.stm.load_data()
+        return self.model.load_data()
 
     def plotting(self):
         """Plotting the graph"""
-        return self.stm.plotting()
+        return self.model.plotting()
 
     def describe(self):
-        return self.stm.compute_descriptive()
+        return self.model.compute_descriptive()
 
     def plotting_cor(self):
-        return self.stm.ploting_corr()
+        return self.model.ploting_corr()
 
     def compute_coff(self):
-        return self.stm.compute_coefficient()
+        return self.model.compute_coefficient()
 
     def describe_corr(self):
-        return self.stm.compute_descriptive_for_corr()
+        return self.model.compute_descriptive_for_corr()
 
     def show_distribution(self, stock, ax):
-        return self.stm.distribution_graph(stock, ax)
+        return self.model.distribution_graph(stock, ax)
 
     def descriptive_distribution(self, stock):
-        return self.stm.descriptive_for_distribution(stock)
+        return self.model.descriptive_for_distribution(stock)
 
     def AlL_price(self, ax):
-        return self.stm.All_prices(ax)
+        return self.model.All_prices(ax)
 
     def closing_price(self, ax):
-        return self.stm.closing_volume(ax)
+        return self.model.closing_volume(ax)
 
     def bar_volume(self, ax):
-        return self.stm.bar_volume(ax)
+        return self.model.bar_volume(ax)
+
+
+
