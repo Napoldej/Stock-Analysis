@@ -6,6 +6,7 @@ class StockController:
                             value=None, graphtype=None,from_date="2022-01-01",to_date= "2023-12-31",ax=None)
 
 
+
     def initialize_corr(self,corr1,corr2,stock,ax):
         self.stm.corr1 = corr1
         self.stm.corr2 = corr2
@@ -24,10 +25,7 @@ class StockController:
 
 
     def load_data(self):
-        load_data = self.stm.load_data()
-        return load_data
-
-
+        return self.stm.load_data()
 
 
     def plotting(self):

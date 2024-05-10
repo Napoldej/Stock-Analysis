@@ -21,7 +21,7 @@ class StockUI(tk.Tk):
             ,"AMD","CCL","PHM", "AAPL", "TSLA"]
         self.price = ["Open","Close","Low","High", "Adj Close", "Volume"]
         self.graph_type = ["line", "hist"]
-        self.all_data = None
+        self.all_data = self.controller.load_data()
         self.from_date = "2022-01-01"
         self.to_date  = "2023-12-31"
         self.coefficient = "0.000"
@@ -106,8 +106,8 @@ class StockUI(tk.Tk):
         self.plot = ctk.CTkButton(self.selectionFrame, text = "Plot",width = 2,height = 2,command= self.plot_handler)
         self.clear = tk.Button(self.selectionFrame, text = "Reset", command = self.clear_handler)
         self.exit = tk.Button(self.selectionFrame, text  = "Exit", command = self.exit_handler)
-        self.time_selection = tk.Button(self.selectionFrame, text = "Time selection", command= self.time_selection_handler)
-        self.load_data = tk.Button(self.selectionFrame, text = "Load Data", command = self.load_data_handler)
+        self.time_selection = ctk.CTkButton(self.selectionFrame, text = "Time selection", command= self.time_selection_handler)
+        # self.load_data = tk.Button(self.selectionFrame, text = "Load Data")
 
         self.distribution = tk.Button(self.buttonFrame, text = "Distribution", command= self.show_distribution_page)
         self.descriptive_statistic_btn = tk.Button(self.buttonFrame, text = "Descriptive Statistics",command = self.show_descriptive_page,
@@ -118,7 +118,7 @@ class StockUI(tk.Tk):
 
 
         self.time_selection.grid(row = 0, column = 1, padx = 5, sticky= "NSEW")
-        self.load_data.grid(row = 0 , column = 2, padx =5 , sticky = "NSEW")
+        # self.load_data.grid(row = 0 , column = 2, padx =5 , sticky = "NSEW")
 
         self.plot.grid(row = 4, column = 0,padx = 5, sticky = "NSEW")
         self.clear.grid(row = 4, column = 1,padx = 5, sticky = "NSEW")
@@ -139,8 +139,8 @@ class StockUI(tk.Tk):
         self.plot.bind("<Button-1>", self.click_plot)
 
 
-    def load_data_handler(self):
-        self.all_data = self.controller.load_data()
+    # def load_data_handler(self):
+    #     self.all_data = self.controller.load_data()
 
     def show_distribution_page(self):
         # Hide current frames
