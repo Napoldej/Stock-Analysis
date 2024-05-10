@@ -628,7 +628,7 @@ class StockUI(tk.Tk):
 
     def time_selection_handler(self):
         self.from_date_var = tk.StringVar()
-        self.time_selection = tk.Toplevel(self)
+        self.time_selection = tk.Toplevel(self, bg = "Blue")
         self.time_selection.title("Date Selection")
         self.from_label = tk.Label(
             self.time_selection,
@@ -645,10 +645,13 @@ class StockUI(tk.Tk):
         self.from_date_entry = Calendar(
             self.time_selection,
             date_pattern='yyyy-mm-dd',
-            fg="Black")
+            foreground="Black",
+            background = "Blue")
         self.to_date_entry = Calendar(
             self.time_selection,
-            date_pattern="yyyy-mm-dd")
+            date_pattern="yyyy-mm-dd",
+            background = "Blue",
+            foreground = "Black")
         self.from_date_entry.grid(
             row=0, column=1, padx=5, pady=5, sticky="NSEW")
         self.to_date_entry.grid(row=1, column=1, padx=5, pady=5, sticky="NSEW")
