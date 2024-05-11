@@ -22,6 +22,6 @@ The package needed for this program, yoo can install in requirements.txt file by
 ## Design Pattern, UML and Sequence Diagrapm
 Design pattern that I used is MVC. by getting the user selected from StockUI. then calling StockController to use the function in StockModel
 
-![UML diagram](pic/UML%20design.png)
+![UML diagram](pic/UML_design.png)
 
 ![Sequence](pic/Sequence%20design.png)
