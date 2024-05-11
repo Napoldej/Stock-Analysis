@@ -25,3 +25,12 @@ Design pattern that I used is MVC. by getting the user selected from StockUI. th
 ![UML diagram](pic/UML_design.png)
 
 ![Sequence](pic/Sequence%20design.png)
+
+## More Information
+[Project Proposal](https://docs.google.com/document/d/1W3-sXkH3IEhhQ5J34V75y0qTaM7smmx63rM3nwzxm_s/edit#heading=h.brkgjcw3i7fl)
+
+[Development plan](https://github.com/napoldejpassornratchakul/Stock-Analysis/wiki/Development-plan)
+
+[Design Documents and UML Diagram](https://github.com/napoldejpassornratchakul/Stock-Analysis/wiki/Design-Documents-and-UML-Diagram)
+
+[How to install](https://github.com/napoldejpassornratchakul/Stock-Analysis/wiki/How-to-install)
