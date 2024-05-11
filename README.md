@@ -25,6 +25,11 @@ Design pattern that I used is MVC. by getting the user selected from StockUI. th
 ![UML diagram](pic/UML_design.png)
 
 ![Sequence](pic/Sequence%20design.png)
+Mainpage
+![Main page](Main%20page.png)
+DataStorytelling
+![Data storytelling](Data%20storytelling%20page.png)
+
 
 ## More Information
 [Project Proposal](https://docs.google.com/document/d/1W3-sXkH3IEhhQ5J34V75y0qTaM7smmx63rM3nwzxm_s/edit#heading=h.brkgjcw3i7fl)
