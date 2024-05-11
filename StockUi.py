@@ -5,7 +5,7 @@ import matplotlib
 from tkcalendar import Calendar
 import customtkinter as ctk
 from datetime import datetime
-
+import time
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
@@ -34,7 +34,9 @@ class StockUI(tk.Tk):
         self.from_date = "2022-01-01"
         self.to_date = "2023-12-31"
         self.coefficient = "0.000"
+        self.download = False
         self.init_component()
+
 
     def init_component(self):
         self.init_graph()
@@ -77,12 +79,12 @@ class StockUI(tk.Tk):
         self.selectGraph.grid(row=2, column=0, padx=30, pady=30, sticky="NSEW")
         self.selectGraph.bind("<<ComboboxSelected>>", self.all_selected)
 
-    def all_selected(self, event):
+    def all_selected(self, event = None):
         attribute_selected1 = self.value_var.get()
         stock_selected = self.stock_var.get()
         graph_selected = self.graph_var.get()
         if (attribute_selected1 != "Select the attribute" and stock_selected !=
-                "Select the stock" and graph_selected != "Select the graph"):
+                "Select the stock" and graph_selected != "Select the graph") and self.download == True:
             self.plot.configure(state=tk.NORMAL)
         else:
             self.plot.configure(state=tk.DISABLED)
@@ -110,7 +112,8 @@ class StockUI(tk.Tk):
             text="Plot",
             width=2,
             height=2,
-            command=self.plot_handler)
+            command=self.plot_handler,
+            state = tk.DISABLED)
         self.clear = ctk.CTkButton(
             self.selectionFrame,
             text="Reset",
@@ -126,7 +129,8 @@ class StockUI(tk.Tk):
         self.load_data_btn = ctk.CTkButton(
             self.selectionFrame,
             text="Load Data",
-            command=lambda: self.load_data)
+            command=lambda: self.load_data,
+            state = tk.NORMAL)
 
         self.distribution = tk.Button(
             self.buttonFrame,
@@ -186,8 +190,16 @@ class StockUI(tk.Tk):
         self.all_data = self.controller.load_data()
 
         progress_bar.stop()
+        self.done_label = tk.Label(progress_window,text = "Done")
+        self.done_label.pack()
+        self.update()
+        time.sleep(2)
+
+
+        self.download = True
 
         progress_window.destroy()
+        self.load_data_btn.configure(state = tk.DISABLED)
 
         return self.all_data
 
@@ -491,16 +503,16 @@ class StockUI(tk.Tk):
         self.selection_stock = ttk.Combobox(
             self.selection_frame,
             textvariable=self.select_stock_corr)
-        self.plot_corr = tk.Button(
+        self.plot_corr = ctk.CTkButton(
             self.selection_frame,
             text="Plot",
             command=self.plot_corr_handler)
 
-        self.reset_corr = tk.Button(
+        self.reset_corr = ctk.CTkButton(
             self.selection_frame,
             text="Reset",
             command=self.reset_corr_handler)
-        self.reset_corr.grid(row=0, column=4, sticky="NSEW")
+        self.reset_corr.grid(row=0, column=4, padx = 5,sticky="NSEW")
         self.plot_corr.grid(row=0, column=3, sticky="NSEW")
 
         self.selection_1.grid(row=0, column=1, sticky="NSEW",)
@@ -651,7 +663,7 @@ class StockUI(tk.Tk):
             self.time_selection,
             date_pattern="yyyy-mm-dd",
             background = "Blue",
-            foreground = "Black")
+            foreground = "Blackb")
         self.from_date_entry.grid(
             row=0, column=1, padx=5, pady=5, sticky="NSEW")
         self.to_date_entry.grid(row=1, column=1, padx=5, pady=5, sticky="NSEW")
