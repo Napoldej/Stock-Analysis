@@ -240,3 +240,5 @@ class StockModel:
             title="Volume",
             x="Date",
             ylabel="the Sale of Volume")
+
+

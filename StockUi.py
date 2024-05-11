@@ -695,3 +695,4 @@ class StockUI(tk.Tk):
 
     def run(self):
         self.mainloop()
+
