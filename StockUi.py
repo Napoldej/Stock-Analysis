@@ -663,7 +663,7 @@ class StockUI(tk.Tk):
             self.time_selection,
             date_pattern="yyyy-mm-dd",
             background = "Blue",
-            foreground = "Blackb")
+            foreground = "Black")
         self.from_date_entry.grid(
             row=0, column=1, padx=5, pady=5, sticky="NSEW")
         self.to_date_entry.grid(row=1, column=1, padx=5, pady=5, sticky="NSEW")
